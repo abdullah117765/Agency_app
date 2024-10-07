@@ -1,0 +1,6 @@
+{
+  "/(root)/page": "app/(root)/page.js",
+  "/(root)/about/page": "app/(root)/about/page.js",
+  "/(root)/services/page": "app/(root)/services/page.js",
+  "/(root)/dashboard/page": "app/(root)/dashboard/page.js"
+}
