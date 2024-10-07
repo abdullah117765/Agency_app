@@ -942,11 +942,11 @@ video {
   .mt-5 {
   margin-top: 1.25rem;
 }
-  .mt-\[4\.5rem\] {
-  margin-top: 4.5rem;
-}
   .mt-80 {
   margin-top: 20rem;
+}
+  .mt-\[4\.5rem\] {
+  margin-top: 4.5rem;
 }
   .block {
   display: block;

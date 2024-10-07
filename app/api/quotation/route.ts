@@ -1,8 +1,7 @@
 // pages/api/quote.js
 
-import nodemailer from 'nodemailer';
-import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/db';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
   try {
@@ -20,6 +19,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    /*
     // Nodemailer setup using environment variables
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
     };
 
     await transporter.sendMail(mailOptions);
-
+*/
     return NextResponse.json(
       { quote: newQuote, success: true },
       { status: 201 }
