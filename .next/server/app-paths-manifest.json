@@ -1,0 +1,5 @@
+{
+  "/dashboard/testimonials/page": "app/dashboard/testimonials/page.js",
+  "/(root)/page": "app/(root)/page.js",
+  "/dashboard/page": "app/dashboard/page.js"
+}
