@@ -6,7 +6,7 @@ import { PhoneIcon, TrashIcon } from "@heroicons/react/24/solid";
 import axios from "axios"; // For fetching blogs
 import { CheckCircleIcon, EditIcon, MailIcon, XCircleIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { createBlog, deleteBlog, updateBlog, updateStatus } from "./axiosApi";
+import { updateBlog, createBlog, deleteBlog, updateStatus } from "./axiosApi";
 import { Blog } from "./blogs.interface";
 
 
