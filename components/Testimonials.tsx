@@ -1,7 +1,54 @@
-import React from "react";
+"use client";
+
+import axios from "axios";
+import { useEffect, useState } from "react";
 import TestimonialCard from "./shared/TestimonialCard";
 
 const Testimonials = () => {
+
+   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0); // State for total pages
+  const itemsPerPage = 5;
+  
+  
+    // Fetch testimonials from backend
+  const fetchTestimonials = async (page: number) => {
+    try {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/testimonials/paginated`, {
+        params: { page, pageSize: itemsPerPage },
+      });
+
+      // Log the fetched data to check structure
+      console.log("Fetched testimonials:", response.data);
+
+      // Assuming your API returns an object with totalCount and testimonials array
+      if (response.data && response.data.totalCount && Array.isArray(response.data.testimonials)) {
+        setTestimonials(response.data.testimonials);
+        // Calculate total pages based on the total count and items per page
+        const totalPages = Math.ceil(response.data.totalCount / itemsPerPage);
+        setTotalPages(totalPages);
+      } else {
+        console.error("Unexpected data structure:", response.data);
+        setTestimonials([]);
+      }
+    } catch (error) {
+      console.error("Error fetching testimonials:", error);
+      setTestimonials([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchTestimonials(currentPage); // Fetch testimonials based on currentPage
+  }, [currentPage]);
+
+  // Handle page change
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page); // Set the current page
+  };
+
+
+  
   return (
     <div className="max-w-7xl mx-auto p-5 px-10 w-full my-32">
       <div className="flex flex-col items-start justify-center gap-2">
@@ -14,20 +61,29 @@ const Testimonials = () => {
           business.
         </p>
       </div>
-      <div className="flex flex-col gap-2 md:grid md:grid-cols-3 md:gap-4">
+
+     
+<div>
+  {testimonials && testimonials.length > 0 ? (
+    <div className="flex flex-col gap-2 md:grid md:grid-cols-3 md:gap-4">
+      {testimonials.map((testimonial) => (
         <TestimonialCard
-          name="Sam"
-          testimonial="I've been in the insurance industry for years, and I've never encountered final expense leads as promising as those from US Leads Agency. Their leads are not only top-notch but also highly responsive. They've had a profound impact on my business, and I can't recommend them highly enough!"
+          key={testimonial.id} // Make sure each testimonial has a unique key (like an id)
+          name={testimonial.fullName}
+          testimonial={testimonial.description}
+          image={testimonial.image}
         />
-        <TestimonialCard
-          name="Edward"
-          testimonial="I can't praise US Leads Agency enough! After trying numerous lead providers, I can confidently state that this company is the only one that has consistently delivered outstanding results. With every order from US Leads Agency, I've managed to sell at least one policy, and my return on investment has more than doubled."
-        />
-        <TestimonialCard
-          name="Adam"
-          testimonial="US Leads Agency has revolutionized my business. Their final expense leads consistently deliver outstanding results, significantly boosting my conversions. The leads are always thoroughly vetted and eager to engage. If you're in the final expense insurance market, US Leads Agency is the best choice!"
-        />
-      </div>
+      ))}
+    </div>
+  ) : (
+    <div className="text-center p-4">
+      <p>No data fetched</p>
+    </div>
+  )}
+</div>
+
+
+
     </div>
   );
 };

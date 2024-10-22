@@ -1,7 +1,6 @@
-import React from "react";
 import imagePerson from "@/public/person2.webp";
 import Image from "next/image";
-const TestimonialCard = ({ testimonial, name }: any) => {
+const TestimonialCard = ({ testimonial, name,image }: any) => {
   return (
     <div className="bg-white rounded-md shadow-2xl px-5 py-5 max-w-md mt-10 hover:scale-105 transition duration-150 ">
       <div className="flex flex-col items-start justify-center gap-10 ">
