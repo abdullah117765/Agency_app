@@ -1,9 +1,52 @@
-import React from "react";
-import ServicesCard from "./ServicesCard";
-import finance from "../public/carlos-muza-hpjSkU2UYSU-unsplash.jpg";
-import medical from "../public/annie-spratt-O1xUS9p4BBs-unsplash.jpg";
+"use client"
+import { Service } from "@/app/dashboard/services/services.interface";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import leads from "../public/campaign-creators-huSZMy_MDkk-unsplash.jpg";
+import Pagination from "./Pagination";
+import ServicesCard from "./ServicesCard";
 const HeroServices = () => {
+
+   const [services, setServices] = useState<Service[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0); // State for total pages
+  const itemsPerPage = 3;
+
+// Fetch services from backend
+  const fetchServices = async (page: number) => {
+    try {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/services/paginated`, {
+        params: { page, pageSize: itemsPerPage },
+      });
+
+      // Log the fetched data to check structure
+      console.log("Fetched services:", response.data);
+
+      // Assuming your API returns an object with totalCount and services array
+      if (response.data && response.data.totalCount && Array.isArray(response.data.services)) {
+        setServices(response.data.services);
+        // Calculate total pages based on the total count and items per page
+        const totalPages = Math.ceil(response.data.totalCount / itemsPerPage);
+        setTotalPages(totalPages);
+      } else {
+        console.error("Unexpected data structure:", response.data);
+        setServices([]);
+      }
+    } catch (error) {
+      console.error("Error fetching services:", error);
+      setServices([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchServices(currentPage); // Fetch services based on currentPage
+  }, [currentPage]);
+
+  // Handle page change
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page); // Set the current page
+  };
+  
   return (
     <div className="max-w-7xl mx-auto p-5 px-10 mt-32">
       <div className="flex flex-col items-center justify-center gap-2 ">
@@ -14,23 +57,27 @@ const HeroServices = () => {
           Services that we provide
         </h1>
       </div>
-      <div className="flex flex-col items-center justify-center gap-10 md:gap-2 mt-10 ">
+      
+<div>
+  {services && services.length > 0 ? (
+     <div className="flex flex-col items-center justify-center gap-10 md:gap-2 mt-10 ">
+      {services.map((service) => (
         <ServicesCard
-          title="Final Expense Leads"
-          description="Final expense leads are prospective customers interested in purchasing insurance designed to cover funeral and burial expenses. These leads consist of individuals actively seeking financial protection for end-of-life costs."
-          images={finance}
-        />
-        <ServicesCard
-          title="Medicare Leads"
-          description="Medicare leads are prospects who have expressed interest in obtaining information or services related to Medicare, a federal health insurance program in the United States primarily for individuals aged 65 and older. These leads often include individuals seeking Medicare Advantage plans, Medicare Supplement Insurance (Medigap), or information about Medicare enrollment."
-          images={medical}
-        />
-        <ServicesCard
-          title="ACA Leads​​"
-          description="ACA leads denote individuals actively seeking health insurance coverage under the Affordable Care Act, commonly referred to as Obamacare. These leads encompass those exploring information about health insurance marketplaces, subsidies, and available options under the ACA."
+          title={service.title}
+          description={service.description}
           images={leads}
         />
-      </div>
+      ))}
+    </div>
+  ) : (
+    <div className="text-center p-4">
+      <p>No data fetched</p>
+    </div>
+  )}
+</div>
+{/* Pagination */}
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+
     </div>
   );
 };

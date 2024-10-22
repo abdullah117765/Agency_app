@@ -2,6 +2,7 @@
 
 import axios from "axios";
 import { useEffect, useState } from "react";
+import Pagination from "./Pagination";
 import TestimonialCard from "./shared/TestimonialCard";
 
 const Testimonials = () => {
@@ -9,7 +10,7 @@ const Testimonials = () => {
    const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0); // State for total pages
-  const itemsPerPage = 5;
+  const itemsPerPage = 3;
   
   
     // Fetch testimonials from backend
@@ -82,7 +83,8 @@ const Testimonials = () => {
   )}
 </div>
 
-
+ {/* Pagination */}
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
 
     </div>
   );
