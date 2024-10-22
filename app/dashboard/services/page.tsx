@@ -6,8 +6,10 @@ import { PhoneIcon, TrashIcon } from "@heroicons/react/24/solid";
 import axios from "axios"; // For fetching services
 import { CheckCircleIcon, EditIcon, MailIcon, XCircleIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { createService, deleteService, updateService, updateStatus } from "./axiosApi";
+
 import { Service } from "./services.interface";
+import { updateService, createService, deleteService, updateStatus } from "./axiosApi";
+
 
 
 
