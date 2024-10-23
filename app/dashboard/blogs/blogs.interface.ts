@@ -6,6 +6,6 @@ export interface Blog {
     author: string;
     description: string;
     image: File | string | null; // Allow both File and URL types 
-    createdAt?: Date;
+    createdAt: Date;
 
 }
