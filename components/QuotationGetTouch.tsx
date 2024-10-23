@@ -1,9 +1,5 @@
 "use client";
-import React from "react";
-import { Button } from "./ui/button";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { Textarea } from "./ui/textarea";
+import { createQuote } from "@/app/dashboard/quotes/axiosApi";
 import {
   Form,
   FormControl,
@@ -14,6 +10,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { getQuoteSchema } from "@/lib/validator";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { Button } from "./ui/button";
+import { Textarea } from "./ui/textarea";
 
 const QuotaionGetTouch = () => {
   const initialValues = {
@@ -34,18 +34,7 @@ const QuotaionGetTouch = () => {
 
   async function onSubmit(values: any) {
     try {
-      const response = await fetch("/api/quotation", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Something went wrong");
-      }
+      const response = await createQuote(values);
 
       form.reset(initialValues);
 
@@ -159,20 +148,15 @@ const QuotaionGetTouch = () => {
                 control={form.control}
                 name="services"
                 render={({ field, fieldState: { error } }) => (
-                  <FormItem className="flex flex-col gap-2 w-full">
-                    <FormLabel className="font-bold text-black">
-                      Services *
-                    </FormLabel>
+                  <FormItem className="w-full">
+                    <FormLabel className="font-bold">Services *</FormLabel>
                     <FormControl>
-                      <select
+                      <Input
+                        type="text"
+                        placeholder="Enter the service you are interested in"
                         {...field}
-                        className="placeholder:text-slate-400 text-black border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
-                      >
-                        <option value="">Select a Service</option>
-                        <option value="Service_Type_1">Service Type 1</option>
-                        <option value="Service_Type_2">Service Type 2</option>
-                        <option value="Service_Type_3">Service Type 3</option>
-                      </select>
+                        className="placeholder:text-slate-400 w-full"
+                      />
                     </FormControl>
                     <FormMessage className="text-red-500 text-sm">
                       {error?.message}

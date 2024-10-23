@@ -1,31 +1,29 @@
 "use client";
-import {
-  FaceIcon,
-  GitHubLogoIcon,
-  InstagramLogoIcon,
-  LinkedInLogoIcon,
-  TwitterLogoIcon,
-} from "@radix-ui/react-icons";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import React from "react";
-import { Mail, MapPin, Phone } from "lucide-react";
-import { Button } from "./ui/button";
-import Image from "next/image";
-import map from "@/public/California_map-L.jpg";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
+import { createContact } from "@/app/dashboard/contacts/axiosApi";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { getTouchSchema } from "@/lib/validator";
+import map from "@/public/California_map-L.jpg";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  GitHubLogoIcon,
+  InstagramLogoIcon,
+  LinkedInLogoIcon,
+  TwitterLogoIcon,
+} from "@radix-ui/react-icons";
+import { Mail, MapPin, Phone } from "lucide-react";
+import Image from "next/image";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { Button } from "./ui/button";
 
 const GetTouch = () => {
   const initialValues = {
@@ -42,18 +40,7 @@ const GetTouch = () => {
 
   async function onSubmit(values: any) {
     try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Something went wrong");
-      }
+      await createContact(values);
 
       form.reset({
         fullName: "",
@@ -65,7 +52,7 @@ const GetTouch = () => {
       alert("Contact submitted successfully!");
     } catch (error) {
       console.error("Error:", error);
-      alert("Failed to submit quote");
+      alert("Failed to submit contact");
     }
   }
 
