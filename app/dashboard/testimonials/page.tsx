@@ -2,9 +2,9 @@
 
 import Pagination from "@/components/Pagination";
 import TestimonialForm from "@/components/TestimonialForm";
-import { PhoneIcon, TrashIcon } from "@heroicons/react/24/solid";
+import { TrashIcon } from "@heroicons/react/24/solid";
 import axios from "axios"; // For fetching testimonials
-import { CheckCircleIcon, EditIcon, MailIcon, XCircleIcon } from "lucide-react";
+import { CheckCircleIcon, EditIcon, XCircleIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { createTestimonial, deleteTestimonial, updateStatus, updateTestimonial } from "./axiosApi";
 
@@ -23,7 +23,7 @@ export default function TestimonialsPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedTestimonial, setSelectedTestimonial] = useState<Testimonial | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const itemsPerPage = 5;
+  const itemsPerPage = 8;
 
   // Fetch testimonials from backend
   const fetchTestimonials = async (page: number) => {
@@ -89,6 +89,10 @@ const handleSubmit = async (testimonial: Testimonial) => {
     }
     fetchTestimonials(currentPage); // Refresh testimonials after submission
   } catch (error) {
+         if (error instanceof Error) {
+        setSuccessMessage(error.message);
+      }
+
     console.error("Error submitting testimonial:", error);
   }
   setIsFormOpen(false);
@@ -102,6 +106,9 @@ const handleSubmit = async (testimonial: Testimonial) => {
       setSuccessMessage("Testimonial deleted successfully!");
       fetchTestimonials(currentPage);
     } catch (error) {
+       if (error instanceof Error) {
+        setSuccessMessage(error.message);
+      }
       console.error("Error deleting testimonial:", error);
     }
   };
@@ -113,6 +120,9 @@ const handleSubmit = async (testimonial: Testimonial) => {
       setSuccessMessage("Status updated successfully!");
       fetchTestimonials(currentPage);
     } catch (error) {
+         if (error instanceof Error) {
+        setSuccessMessage(error.message);
+      }
       console.error("Error updating status:", error);
     }
   };
@@ -125,8 +135,16 @@ const handleSubmit = async (testimonial: Testimonial) => {
 
   return (
     <div className="p-8 bg-gray-50 min-h-screen">
-      <h1 className="text-4xl font-extrabold mb-8 text-center text-gray-900">Testimonials</h1>
-
+           <div className="flex flex-col items-start justify-center gap-2 mt-20">
+        <h1 className="font-extrabold text-5xl md:text-6xl tracking-tighter border-b-4 border-yellow-500 py-2">
+          Testimonials
+        </h1>
+        <p className="text-slate-500 tracking-tighter">
+          Our clients speak for us: Incredible attention to detail and unmatched
+          expertise. Working with Agency has been a game-changer for our
+          business.
+        </p>
+      </div>
       {/* Success Message */}
       {successMessage && (
         <div className="mb-4 p-2 bg-green-100 text-green-700 border border-green-300 rounded">
@@ -135,7 +153,7 @@ const handleSubmit = async (testimonial: Testimonial) => {
       )}
 
       {/* Add Testimonial Button */}
-      <div className="flex justify-end mb-4">
+      <div className="flex justify-end mb-4 mt-8">
         <button
           onClick={handleAddTestimonial}
           className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
@@ -145,22 +163,27 @@ const handleSubmit = async (testimonial: Testimonial) => {
       </div>
 
       {/* Testimonials Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
         {testimonials.map((testimonial) => (
           <div key={testimonial.id} className="bg-white shadow-lg p-6 rounded-lg transition-transform transform hover:scale-105 relative">
             {testimonial.image && (
-              <img
-                src={typeof testimonial.image === "string" ? testimonial.image : URL.createObjectURL(testimonial.image)}
-                alt={testimonial.fullName}
-                className="h-32 w-32 rounded-full mx-auto mb-4 border-2 border-blue-500"
-              />
+
+               <div className="flex flex-col items-start justify-center gap-5">
+          <img
+            src={typeof testimonial.image === "string" ? testimonial.image : URL.createObjectURL(testimonial.image)}
+              alt={testimonial.fullName}
+            width={100}
+            height={100}
+            className="aspect-square  object-cover rounded-full w-[100px] h-[100px]"
+          />
+          <p className="tracking-tighter text-slate-500">{testimonial.description}</p>
+        </div>
+
             )}
-            <h2 className="text-xl font-semibold text-gray-800 text-center">{testimonial.fullName}</h2>
-            <p className="text-gray-600 text-center mt-2">{testimonial.description}</p>
-            <div className="mt-4 flex justify-center gap-4">
-              <PhoneIcon className="h-5 w-5 text-blue-600 hover:text-blue-700 transition" />
-              <MailIcon className="h-5 w-5 text-blue-600 hover:text-blue-700 transition" />
-            </div>
+          
+         <div className="border-t-2 border-gray-400">
+          <h1 className="font-bold tracking-tighter">{testimonial.fullName}</h1>
+        </div>
 
             {/* Edit, Delete, and Status Buttons */}
             <div className="absolute top-4 right-4 flex space-x-2">

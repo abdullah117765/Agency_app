@@ -17,13 +17,13 @@ export default function BlogForm({ blog, onSubmit, onCancel }: BlogFormProps) {
   const [title, setTitle] = useState<string>(blog?.title || "");
   const [author, setAuthor] = useState<string>(blog?.author || "");
   const [description, setDescription] = useState<string>(blog?.description || "");
-  const [image, setImage] = useState<File | null>(null); // Change to handle File type
+  const [image, setImage] = useState<File | string |  null>( blog?.image|| null); // Change to handle File type
   const [successMessage, setSuccessMessage] = useState<string>("");
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!image) {
+    if (typeof image !== "string" && !image) {
       alert("Please upload an image file.");
       return;
     }
@@ -39,7 +39,7 @@ export default function BlogForm({ blog, onSubmit, onCancel }: BlogFormProps) {
     setTitle("");
     setDescription("");
     setImage(null);
-    setTimeout(() => setSuccessMessage(""), 3000); // Clear success message after 3 seconds
+   setSuccessMessage("")
   };
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -83,16 +83,17 @@ export default function BlogForm({ blog, onSubmit, onCancel }: BlogFormProps) {
           />
         </div>
 
-        <div className="relative mb-4">
-          <MailIcon className="absolute left-3 top-2 h-5 w-5 text-gray-400" />
-          <textarea
-            placeholder="Description"
-            value={description}
-            onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
-            className="w-full pl-10 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-            required
-          />
-        </div>
+<div className="relative mb-4">
+  <MailIcon className="absolute left-3 top-2 h-5 w-5 text-gray-400" />
+  <textarea
+    placeholder="Description"
+    value={description}
+    onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
+    className="w-full pl-10 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+    required
+  />
+</div>
+
 
         <div className="mb-4">
           <input
@@ -100,11 +101,14 @@ export default function BlogForm({ blog, onSubmit, onCancel }: BlogFormProps) {
             accept="image/*" // Accept only image files
             onChange={handleImageChange}
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-            required
+           
           />
           {image && (
             <div className="mt-2">
-              <img src={URL.createObjectURL(image)} alt="Preview" className="w-full h-auto rounded-lg" />
+              <img  src={
+                  typeof image === "string" ? image : URL.createObjectURL(image)
+                }
+                alt="Preview" className="w-full h-auto rounded-lg" />
             </div>
           )}
         </div>

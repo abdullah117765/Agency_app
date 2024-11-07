@@ -1,5 +1,6 @@
 import Footer from "@/components/shared/Footer";
 import Navbar from "@/components/shared/Navbar";
+import NavbarAdmin from "@/components/NavbarAdmin";
 
 export default async function RootLayout({
   children,
@@ -8,7 +9,7 @@ export default async function RootLayout({
 }>) {
   return (
     <div className="flex h-screen flex-col">
-      <Navbar />
+      <NavbarAdmin />
 
       <main className="flex-1">{children}</main>
       <Footer />

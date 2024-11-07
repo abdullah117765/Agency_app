@@ -21,7 +21,7 @@ const QuotaionGetTouch = () => {
     lastName: "",
     email: "",
     phone: "",
-    services: undefined,
+    services: "",
     NoOfServices: 0,
     comments: "",
   };

@@ -2,10 +2,12 @@
 
 
 import { Service } from '@/app/dashboard/services/services.interface';
-import { PhoneIcon } from '@heroicons/react/24/solid';
-import { MailIcon } from 'lucide-react';
+import {
+  KeyboardIcon,
+  PersonIcon,
+} from "@radix-ui/react-icons";
 import { ChangeEvent, FormEvent, useState } from "react";
-
+import { LuDollarSign } from "react-icons/lu";
 
 
 interface ServiceFormProps {
@@ -18,7 +20,7 @@ export default function ServiceForm({ service, onSubmit, onCancel }: ServiceForm
   const [title, setTitle] = useState<string>(service?.title || "");
   const [price, setPrice] = useState<number>(service?.price || 0);
   const [description, setDescription] = useState<string>(service?.description || "");
-  const [image, setImage] = useState<File | null>(null); // Change to handle File type
+  const [image, setImage] = useState<File | string|  null>(service?.image || null); // Change to handle File type
   const [successMessage, setSuccessMessage] = useState<string>("");
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -60,8 +62,8 @@ export default function ServiceForm({ service, onSubmit, onCancel }: ServiceForm
           </div>
         )}
 
-        <div className="relative mb-4">
-          <PhoneIcon className="absolute left-3 top-2 h-5 w-5 text-gray-400" />
+        <div className="relative mb-4 flex items-center">
+          <PersonIcon className="absolute left-3  h-5 w-5 text-gray-400" />
           <input
             type="text"
             placeholder="Full Name"
@@ -72,8 +74,8 @@ export default function ServiceForm({ service, onSubmit, onCancel }: ServiceForm
           />
         </div>
 
-         <div className="relative mb-4">
-          <PhoneIcon className="absolute left-3 top-2 h-5 w-5 text-gray-400" />
+         <div className="relative mb-4 flex items-center">
+          < LuDollarSign className="absolute left-3  h-5 w-5 text-gray-400" />
           <input
             type="number"
             placeholder="price"
@@ -84,8 +86,8 @@ export default function ServiceForm({ service, onSubmit, onCancel }: ServiceForm
           />
         </div>
 
-        <div className="relative mb-4">
-          <MailIcon className="absolute left-3 top-2 h-5 w-5 text-gray-400" />
+        <div className="relative mb-4 flex items-center">
+          <KeyboardIcon className="absolute left-3 top-4 h-5 w-5 text-gray-400" />
           <textarea
             placeholder="Description"
             value={description}
@@ -105,7 +107,9 @@ export default function ServiceForm({ service, onSubmit, onCancel }: ServiceForm
           />
           {image && (
             <div className="mt-2">
-              <img src={URL.createObjectURL(image)} alt="Preview" className="w-full h-auto rounded-lg" />
+              <img  src={
+                  typeof image === "string" ? image : URL.createObjectURL(image)
+                } alt="Preview" className="w-full h-auto rounded-lg" />
             </div>
           )}
         </div>
