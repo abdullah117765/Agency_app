@@ -1,6 +1,5 @@
 "use client";
-import { Blog } from "@/app/dashboard/blogs/blogs.interface";
-import { User } from "@/app/dashboard/users/users.interface";
+import { Blog2 } from "@/app/dashboard/blogs/blogs.interface";
 import BlogPost from "@/components/BlogPost";
 import HeroBlogPage from "@/components/HeroBlogPage";
 import axios from "axios";
@@ -8,8 +7,8 @@ import { useParams } from "next/navigation"; // Import useParams
 import { useEffect, useState } from "react";
 
 const BlogPage = () => {
-  const [blog, setBlog] = useState<Blog | null>(null);
-  const [user, setUser] = useState<User | null>(null);
+  const [blog, setBlog] = useState<Blog2 | null>(null);
+  
   const [isMounted, setIsMounted] = useState(false);
   const { id } = useParams<{ id: string | string[] }>(); // Type the useParams return value
 
@@ -32,23 +31,7 @@ const BlogPage = () => {
       setBlog(null);
     }
 
-    try {
-      const sdf = "67169e7b9ec5d933cd45545e";
-      const userResponse = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/users/findone/${sdf}`
-      );
-
-      console.log("Fetched user:", userResponse.data);
-      if (userResponse.data) {
-        setUser(userResponse.data);
-      } else {
-        console.error("Unexpected user data structure:", userResponse.data);
-        setUser(null);
-      }
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      setUser(null);
-    }
+  
   };
 
   // Ensure the component is mounted before using the ID
@@ -68,14 +51,12 @@ const BlogPage = () => {
     return <div>Blog post not found</div>;
   }
 
-  if (!user) {
-    return <div>Blog post's user not found</div>;
-  }
+
 
   return (
     <>
-      <HeroBlogPage />
-      <BlogPost user={user} blog={blog} />
+      <HeroBlogPage blog={blog}  />
+      <BlogPost  blog={blog} />
     </>
   );
 };

@@ -1,13 +1,12 @@
 "use client";
-import { Blog } from "@/app/dashboard/blogs/blogs.interface";
+import { Blog2 } from "@/app/dashboard/blogs/blogs.interface";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import BlogCard from "./BlogCard";
 import Pagination from "./Pagination";
-import { Input } from "./ui/input";
 
 const BlogRegion = () => {
-  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [blogs, setBlogs] = useState<Blog2[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0); // State for total pages
 
@@ -57,16 +56,17 @@ const BlogRegion = () => {
 
   return (
     <div className="max-w-7xl mx-auto p-5 px-10 w-full border-t-2 border-gray-200 my-24">
-      <Input placeholder="Search" />
+      {/* <Input placeholder="Search" /> */}
 
       <div>
         {blogs && blogs.length > 0 ? (
-          <div className="flex flex-col gap-10 items-center justify-center md:grid md:grid-cols-2 md:gap-20 mt-10 px-20 py-20">
+          <div className="flex flex-col gap-10 items-center justify-center md:grid md:grid-cols-2 md:gap-20  px-20 py-20">
             {blogs.map((blog) => (
               <BlogCard
-                date={blog.createdAt.toString()}
+                date={blog.createdAt?.toString() || ""}
                 title={blog.title}
                 id={blog.id}
+                image={typeof blog.image === "string" ? blog.image : ""}
               />
             ))}
           </div>
