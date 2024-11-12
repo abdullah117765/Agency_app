@@ -62,7 +62,7 @@ const NavbarAdmin = () => {
       <div className="flex flex-row items-center justify-between">
         <div>
           <Link href={"/"} className="tracking-tight font-bold text-lg">
-            Wemarket
+            WeMarket
           </Link>
         </div>
         <div className="hidden md:block">

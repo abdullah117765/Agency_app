@@ -2,6 +2,7 @@
 "use client"; // Declare as a client component
 
 import AdminStat from '@/components/AdminStat';
+import ChartComponent2 from '@/components/ChartComponent2';
 import ChartComponent from '../../components/ChartComponent';
 import RecentContacts from '../../components/RecentContacts';
 import RecentQuotes from '../../components/RecentQuotes';
@@ -16,7 +17,7 @@ const Dashboard = () => {
       <div className='grid grid-cols-1 md:grid-cols-1 gap-6 mt-4'>
          <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mt-12'>
         <ChartComponent />
-        <ChartComponent />
+        <ChartComponent2 />
         <AdminStat/>
       </div>
 
