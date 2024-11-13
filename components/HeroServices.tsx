@@ -2,7 +2,6 @@
 import { Service } from "@/app/dashboard/services/services.interface";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import leads from "../public/campaign-creators-huSZMy_MDkk-unsplash.jpg";
 import Pagination from "./Pagination";
 import ServicesCard from "./ServicesCard";
 const HeroServices = () => {
@@ -16,7 +15,7 @@ const HeroServices = () => {
   const fetchServices = async (page: number) => {
     try {
       const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/services/paginated`, {
-        params: { page, pageSize: itemsPerPage },
+        params: { page, pageSize: itemsPerPage ,status: "active"},
       });
 
       // Log the fetched data to check structure
@@ -26,7 +25,7 @@ const HeroServices = () => {
       if (response.data && response.data.totalCount && Array.isArray(response.data.services)) {
         setServices(response.data.services);
         // Calculate total pages based on the total count and items per page
-        const totalPages = Math.ceil(response.data.totalCount / itemsPerPage);
+        const totalPages = Math.ceil(response.data.services.length / itemsPerPage);
         setTotalPages(totalPages);
       } else {
         console.error("Unexpected data structure:", response.data);
@@ -65,7 +64,7 @@ const HeroServices = () => {
         <ServicesCard
           title={service.title}
           description={service.description}
-          images={leads}
+          images={service.image}
         />
       ))}
     </div>

@@ -18,7 +18,7 @@ const BlogRegion = () => {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/blogs/paginated`,
         {
-          params: { page, pageSize: itemsPerPage },
+          params: { page, pageSize: itemsPerPage , status: "active"},
         }
       );
 
@@ -33,7 +33,7 @@ const BlogRegion = () => {
       ) {
         setBlogs(response.data.blogs);
         // Calculate total pages based on the total count and items per page
-        const totalPages = Math.ceil(response.data.totalCount / itemsPerPage);
+        const totalPages = Math.ceil(response.data.blogs.length / itemsPerPage);
         setTotalPages(totalPages);
       } else {
         console.error("Unexpected data structure:", response.data);

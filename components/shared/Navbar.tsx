@@ -1,15 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
-import Image from "next/image";
-import menu from "@/public/menu.svg";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
-import { Button } from "../ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import menu from "@/public/menu.svg";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import Dropdown from "../Dropdown";
-import { useRouter } from "next/navigation";
 
 const Navbar = () => {
   const TOP_OFFSET = 0;
@@ -96,7 +94,7 @@ const Navbar = () => {
               >
                 SERVICES
               </Link>
-              {showDropdown && <Dropdown services={services} />}
+              {/* {showDropdown && <Dropdown services={services} />} */}
             </div>
             <Link
               className={`${

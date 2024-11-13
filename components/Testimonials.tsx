@@ -17,7 +17,7 @@ const Testimonials = () => {
   const fetchTestimonials = async (page: number) => {
     try {
       const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/testimonials/paginated`, {
-        params: { page, pageSize: itemsPerPage },
+        params: { page, pageSize: itemsPerPage , status: "active" },
       });
 
       // Log the fetched data to check structure
@@ -27,7 +27,7 @@ const Testimonials = () => {
       if (response.data && response.data.totalCount && Array.isArray(response.data.testimonials)) {
         setTestimonials(response.data.testimonials);
         // Calculate total pages based on the total count and items per page
-        const totalPages = Math.ceil(response.data.totalCount / itemsPerPage);
+        const totalPages = Math.ceil(response.data.testimonials.length / itemsPerPage);
         setTotalPages(totalPages);
       } else {
         console.error("Unexpected data structure:", response.data);

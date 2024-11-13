@@ -94,7 +94,7 @@ const NavbarAdmin = () => {
               >
                 SERVICES
               </Link>
-              {showDropdown && <Dropdown services={services} />}
+              {/* {showDropdown && <Dropdown services={services} />} */}
             </div>
             <Link
               className={`${
@@ -125,6 +125,12 @@ const NavbarAdmin = () => {
               QUOTES
             </Link>
 
+                                    <Link
+              className={`${pathname === "/project" ? "font-bold" : "text-black"}`}
+              href={"/dashboard/projects"}
+            >
+              Projects
+            </Link>
 
           </div>
         </div>

@@ -1,55 +1,56 @@
 "use client";
 
 import Pagination from "@/components/Pagination";
-import ServiceForm from "@/components/ServiceForm";
+
 import { TrashIcon } from "@heroicons/react/24/solid";
-import axios from "axios"; // For fetching services
+import axios from "axios"; // For fetching projects
 import { CheckCircleIcon, EditIcon, XCircleIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import { createService, deleteService, updateService, updateStatus } from "./axiosApi";
-import { Service } from "./services.interface";
+import ProjectForm from "@/components/ProjectForm";
+import { createProject, deleteProject, updateProject, updateStatus } from "./axiosApi";
+import { Project } from "./projects.interface";
 
 
 
 
-export default function ServicesPage() {
-  const [services, setServices] = useState<Service[]>([]);
+export default function ProjectsPage() {
+  const [projects, setProjects] = useState<Project[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0); // State for total pages
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [selectedService, setSelectedService] = useState<Service | null>(null);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const itemsPerPage = 5;
 
-  // Fetch services from backend
-  const fetchServices = async (page: number) => {
+  // Fetch projects from backend
+  const fetchProjects = async (page: number) => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/services/paginated`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/projects/paginated`, {
         params: { page, pageSize: itemsPerPage },
       });
 
       // Log the fetched data to check structure
-      console.log("Fetched services:", response.data);
+      console.log("Fetched projects:", response.data);
 
-      // Assuming your API returns an object with totalCount and services array
-      if (response.data && response.data.totalCount && Array.isArray(response.data.services)) {
-        setServices(response.data.services);
+      // Assuming your API returns an object with totalCount and projects array
+      if (response.data && response.data.totalCount && Array.isArray(response.data.projects)) {
+        setProjects(response.data.projects);
         // Calculate total pages based on the total count and items per page
         const totalPages = Math.ceil(response.data.totalCount / itemsPerPage);
         setTotalPages(totalPages);
       } else {
         console.error("Unexpected data structure:", response.data);
-        setServices([]);
+        setProjects([]);
       }
     } catch (error) {
-      console.error("Error fetching services:", error);
-      setServices([]);
+      console.error("Error fetching projects:", error);
+      setProjects([]);
     }
   };
 
   useEffect(() => {
-    fetchServices(currentPage); // Fetch services based on currentPage
+    fetchProjects(currentPage); // Fetch projects based on currentPage
   }, [currentPage]);
 
   // Handle page change
@@ -57,53 +58,52 @@ export default function ServicesPage() {
     setCurrentPage(page); // Set the current page
   };
 
-  // Add new service
-  const handleAddService = () => {
-    setSelectedService(null);
+  // Add new project
+  const handleAddProject = () => {
+    setSelectedProject(null);
     setIsFormOpen(true);
   };
 
-  // Submit service (Add or Update)
-  // Submit service (Add or Update)
-const handleSubmit = async (service: Service) => {
+  // Submit project (Add or Update)
+  // Submit project (Add or Update)
+const handleSubmit = async (project: Project) => {
   const formData = new FormData();
-    formData.append("title", service.title);
-    formData.append("price", service.price.toString());
-  formData.append("description", service.description);
-  formData.append("status", service.status);
-  if (service.image instanceof File) {
-    formData.append("image", service.image);
+    formData.append("title", project.title);
+  formData.append("description", project.description);
+  formData.append("status", project.status);
+  if (project.image instanceof File) {
+    formData.append("image", project.image);
   }
 
   try {
-    if (service.id) {
+    if (project.id) {
       // Update logic
-      await updateService(service.id, formData); // Pass formData for updates
-      setSuccessMessage("Service updated successfully!");
+      await updateProject(project.id, formData); // Pass formData for updates
+      setSuccessMessage("Project updated successfully!");
     } else {
-      // Add new service logic
-      await createService(formData);
-      setSuccessMessage("Service added successfully!");
+      // Add new project logic
+      await createProject(formData);
+      setSuccessMessage("Project added successfully!");
     }
-    fetchServices(currentPage); // Refresh services after submission
+    fetchProjects(currentPage); // Refresh projects after submission
   } catch (error) {
     if (error instanceof Error) {
         setSuccessMessage(error.message);
       }
 
     
-    console.error("Error submitting service:", error);
+    console.error("Error submitting project:", error);
   }
   setIsFormOpen(false);
 };
 
 
-  // Delete service
+  // Delete project
   const handleDelete = async (id: string) => {
     try {
-      await deleteService(id);
-      setSuccessMessage("Service deleted successfully!");
-      fetchServices(currentPage);
+      await deleteProject(id);
+      setSuccessMessage("Project deleted successfully!");
+      fetchProjects(currentPage);
     } catch (error) {
 
       if (error instanceof Error) {
@@ -111,16 +111,16 @@ const handleSubmit = async (service: Service) => {
       }
 
 
-      console.error("Error deleting service:", error);
+      console.error("Error deleting project:", error);
     }
   };
 
-  // Change service status
+  // Change project status
   const handleStatusChange = async (id: string, newStatus: string) => {
     try {
       await updateStatus(id, newStatus);
       setSuccessMessage("Status updated successfully!");
-      fetchServices(currentPage);
+      fetchProjects(currentPage);
     } catch (error) {
 
       if (error instanceof Error) {
@@ -133,20 +133,21 @@ const handleSubmit = async (service: Service) => {
     }
   };
 
-  // Edit service
-  const handleEdit = (service: Service) => {
-    setSelectedService(service);
+  // Edit project
+  const handleEdit = (project: Project) => {
+    setSelectedProject(project);
     setIsFormOpen(true);
   };
 
   return (
     <div className="p-8 bg-gray-50 min-h-screen">
-              <div className="flex flex-col items-start justify-center gap-3 mt-16">
+             <div className="flex flex-col items-start justify-center gap-3 mt-16">
         <h1 className="font-extrabold text-xl md:text-2xl tracking-tighter border-b-4 border-yellow-500 py-2">
-          Services
+          Projects
         </h1>
 
       </div>
+
 
       {/* Success Message */}
       {successMessage && (
@@ -155,64 +156,63 @@ const handleSubmit = async (service: Service) => {
         </div>
       )}
 
-      {/* Add Service Button */}
+      {/* Add Project Button */}
       <div className="flex justify-end mb-4">
         <button
-          onClick={handleAddService}
+          onClick={handleAddProject}
           className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
         >
-          Add Service
+          Add Project
         </button>
       </div>
 
-      {/* Services Grid */}
+      {/* Projects Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {services.map((service) => (
+        {projects.map((project) => (
           <div
-            key={service.id}
+            key={project.id}
             className="bg-white shadow-lg p-6 rounded-lg transition-transform transform hover:scale-105 relative"
           >
-            {service.image && (
+            {project.image && (
               <img
                 src={
-                  typeof service.image === "string"
-                    ? service.image
-                    : URL.createObjectURL(service.image)
+                  typeof project.image === "string"
+                    ? project.image
+                    : URL.createObjectURL(project.image)
                 }
-                alt={service.title}
-                className="h-32 w-32 rounded-full mx-auto mb-4 border-2 border-blue-500"
+                alt={project.title}
+               
               />
             )}
 
             <div className="border-b-2 border-gray-400">
-              <h1 className="font-bold tracking-tighter">{service.title}</h1>
-              <h1 className="font-bold tracking-tighter"> $ {service.price}</h1>
+              <h1 className="font-bold tracking-tighter">{project.title}</h1>
             </div>
 
             <p className="text-gray-600  mt-2">
-              {service.description}
+              {project.description}
             </p>
 
             {/* Edit, Delete, and Status Buttons */}
             <div className="absolute top-4 right-4 flex space-x-2">
               <EditIcon
-                onClick={() => handleEdit(service)}
+                onClick={() => handleEdit(project)}
                 className=" h-5 w-5  text-blue-600 hover:text-blue-700 transition "
               />
               <TrashIcon
-                onClick={() => handleDelete(service.id)}
+                onClick={() => handleDelete(project.id)}
                 className=" h-5 w-5 text-red-600 hover:text-red-700 transition"
               />
               <button
                 onClick={() =>
                   handleStatusChange(
-                    service.id,
-                    service.status === "active" ? "inactive" : "active"
+                    project.id,
+                    project.status === "active" ? "inactive" : "active"
                   )
                 }
                 className="text-gray-600 hover:text-gray-700 transition"
               >
-                {service.status === "active" ? (
+                {project.status === "active" ? (
                   <CheckCircleIcon className="h-5 w-5 text-green-600 hover:text-green-700 transition" />
                 ) : (
                   <XCircleIcon className="h-5 w-5 text-gray-600 hover:text-gray-700 transition" />
@@ -230,10 +230,10 @@ const handleSubmit = async (service: Service) => {
         onPageChange={handlePageChange}
       />
 
-      {/* Service Form Modal */}
+      {/* Project Form Modal */}
       {isFormOpen && (
-        <ServiceForm
-          service={selectedService}
+        <ProjectForm
+          project={selectedProject}
           onSubmit={handleSubmit}
           onCancel={() => setIsFormOpen(false)}
         />
